@@ -1,8 +1,18 @@
 package main
 
-import(
+import (
+	"embed"
+	_ "embed"
 	"github.com/AyushGlitchedOut/Quick-Search/app"
 )
+
+// import and embed the assets folder
+//
+//go:embed assets
+var assets embed.FS
+
 func main() {
-	app.CreateSearchBar()
+
+	//create the main app Search Bar
+	app.CreateSearchBar(assets)
 }

@@ -1,42 +1,67 @@
 package app
 
 import (
-	"log"
-
+	"embed"
+	"github.com/AyushGlitchedOut/Quick-Search/services"
+	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
+	"log"
 )
 
-func CreateSearchBar() {
-	// Initialize GTK without parsing any command line arguments.
+// Create the Main App Search Bar
+func CreateSearchBar(assets embed.FS) {
+
+	//Get the Styles from embedded AppStyles.css file and load them
+	StyleData := services.StyleReader(assets, "Appstyles.css")
+	cssProvider, err := gtk.CssProviderNew()
+	if err != nil {
+		log.Fatal("Error Getting Styles:", err)
+	}
+	cssProvider.LoadFromData(StyleData)
+
+	//Start Gtk
 	gtk.Init(nil)
 
-	// Create a new toplevel window, set its title, and connect it to the
-	// "destroy" signal to exit the GTK main loop when it is destroyed.
+	//New Top-Level Window
 	win, err := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
+
 	if err != nil {
 		log.Fatal("Unable to create window:", err)
 	}
-	win.SetTitle("Simple Example")
+
+	//Set Size to 1200,60
+	win.SetDefaultSize(1200, 60)
+	//Remove TitleBar and Other stuff
+	win.SetDecorated(false)
+	//Remove window
+	win.SetHasWindow(false)
+	//Not resizable
+	win.SetResizable(false)
+	//Set Title of the application
+	win.SetTitle("Quick Search")
+	//!When its closed, quit gtk
 	win.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
+	//If escape is pressed, Quit the App
+	win.Connect("key-press-event", func(w *gtk.Window, event *gdk.Event) {
+		keyPressed := gdk.EventKeyNewFromEvent(event)
+		//If pressed key == Escape, quit
+		if keyPressed.KeyVal() == gdk.KEY_Escape {
+			gtk.MainQuit()
+		}
+	})
 
-	// Create a new label widget to show in the window.
-	l, err := gtk.LabelNew("Hello, gotk3!")
-	if err != nil {
-		log.Fatal("Unable to create label:", err)
-	}
+	//When App loads, set size to 1200,60 (done again for setting up purposes)
+	win.Connect("realize", func() {
+		win.SetSizeRequest(1200, 60)
+	})
+	//Add CSS Provider for the window
+	gtk.AddProviderForScreen(win.GetScreen(), cssProvider, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-	// Add the label to the window.
-	win.Add(l)
-
-	// Set the default window size.
-	win.SetDefaultSize(800, 600)
-
-	// Recursively show all widgets contained in this window.
+	//show everything
 	win.ShowAll()
 
-	// Begin executing the GTK main loop.  This blocks until
-	// gtk.MainQuit() is run.
+	//Start the Main loop
 	gtk.Main()
 }
