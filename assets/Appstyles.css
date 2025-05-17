@@ -1,6 +1,20 @@
 
 /*The styles for the Main Window*/
 window{
-    background-color: rgba(10,10,10,0.9);
+    background-color: rgba(20,20,20,0.9);
     border-radius: 12px;
+}
+
+/*Styles for search bar*/
+.search{
+    background-color: rgba(128,128,128,0.5);
+    margin: 10px;
+    color: whitesmoke;
+}
+
+/*Styles for the button*/
+.button{
+    background-color: rgba(200,200,200,0.5);
+    margin: 7px;
+    color: white;
 }
