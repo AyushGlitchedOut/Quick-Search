@@ -2,6 +2,7 @@ package app
 
 import (
 	"embed"
+	"fmt"
 	"github.com/AyushGlitchedOut/Quick-Search/services"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/glib"
@@ -9,8 +10,10 @@ import (
 	"log"
 )
 
-// Create the Main App Search Bar
+// CreateSearchBar : Create the Main App Search Bar
 func CreateSearchBar(assets embed.FS) {
+	//a boolean to track the state of the dropdown open/close to decide whether to  close upon focus-lost or not
+	var IsMenuDialogOpen = false
 
 	//Get the Styles from embedded AppStyles.css file and load them
 	StyleData := services.StyleReader(assets, "Appstyles.css")
@@ -34,7 +37,7 @@ func CreateSearchBar(assets embed.FS) {
 	}
 
 	//Set Size to 1200,60
-	win.SetDefaultSize(1200, 50)
+	win.SetDefaultSize(1200, 60)
 	//Remove TitleBar and Other stuff
 	win.SetDecorated(false)
 	//Remove window
@@ -43,6 +46,18 @@ func CreateSearchBar(assets embed.FS) {
 	win.SetResizable(false)
 	//Set Title of the application
 	win.SetTitle("Quick Search")
+
+	//Enable Right-Click
+	win.Connect("button-press-event", func(widget *gtk.Window, event *gdk.Event) {
+
+		buttonPressed := gdk.EventButtonNewFromEvent(event).Button()
+
+		if buttonPressed == gdk.BUTTON_SECONDARY {
+			//TODO: Make it Open the settings menu
+			fmt.Println("Right Click Pressed!!!")
+		}
+
+	})
 
 	//!When its closed, quit gtk
 	win.Connect("destroy", func() {
@@ -60,11 +75,16 @@ func CreateSearchBar(assets embed.FS) {
 
 	//When App loads, set size to 1200,60 (done again for setting up purposes)
 	win.Connect("realize", func() {
-		win.SetSizeRequest(1000, 60)
+		win.SetSizeRequest(1200, 60)
 	})
 
-	//Close the App if The user clicks outside the interface
+	//Close the App Upon focus out
 	win.Connect("focus-out-event", func() {
+		//Check if the focus-out is due to dropdown being open
+		if IsMenuDialogOpen {
+			return
+		}
+
 		gtk.MainQuit()
 	})
 
@@ -77,7 +97,11 @@ func CreateSearchBar(assets embed.FS) {
 	searchBar := _SearchBar()
 	//Get the searchButton
 	searchButton := _SearchButton()
-	//add the searchbar and button
+	//Get the MenuButton
+	menuButton := _MenuButton(&IsMenuDialogOpen)
+
+	//add the searchbar and button and menuButton
+	mainBox.Add(menuButton)
 	mainBox.Add(searchBar)
 	mainBox.Add(searchButton)
 
@@ -90,10 +114,14 @@ func CreateSearchBar(assets embed.FS) {
 			services.ExecuteQuery(searchBar)
 		}
 	})
+
 	//when the button is pressed, the ExecuteQuery() service is run
 	searchButton.Connect("clicked", func() {
 		services.ExecuteQuery(searchBar)
 	})
+
+	//focus the searchbar upon load
+	searchBar.GrabFocus()
 
 	win.Add(mainBox)
 	win.ShowAll()
@@ -111,7 +139,7 @@ func _Box() *gtk.Box {
 	}
 
 	//set size
-	box.SetSizeRequest(1000, 60)
+	box.SetSizeRequest(1200, 60)
 
 	//set a css style .box (not used for now)
 	style, _ := box.GetStyleContext()
@@ -133,7 +161,7 @@ func _SearchBar() *gtk.SearchEntry {
 	style.AddClass("search")
 
 	//Set size
-	SearchBar.SetSizeRequest(900, 40)
+	SearchBar.SetSizeRequest(800, 40)
 
 	//set placeholder text
 	SearchBar.SetPlaceholderText("Enter your Query....")

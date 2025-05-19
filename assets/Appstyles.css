@@ -1,4 +1,5 @@
 
+
 /*The styles for the Main Window*/
 window{
     background-color: rgba(20,20,20,0.9);
@@ -16,5 +17,38 @@ window{
 .button{
     background-color: rgba(200,200,200,0.5);
     margin: 7px;
-    color: white;
+    color: whitesmoke;
+}
+
+/*Styles for the Menu Button*/
+.menuButton{
+    margin: 10px;
+    background-color: rgba(200,200,200,0.5);
+    color: black;
+}
+
+/*Giving margin to elements inside menuButton*/
+.menuButton *{
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+/*Styles for the dialog*/
+.dialog{
+    background-color: rgba(20,20,20,0.9);
+    border-radius: 12px;
+}
+
+/*Styles for the Layout of MenuDialog Buttons*/
+.menuDialogLayout{
+    background-color: rgba(200,200,200,0.5);
+    margin: 10px;
+}
+
+/*Margins for elements inside Layout of MenuDialog Button*/
+.menuDialogLayout *{
+    margin-right: 5px;
+    margin-left: 5px;
+
 }

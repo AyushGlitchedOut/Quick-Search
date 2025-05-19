@@ -1,76 +1,53 @@
 package services
 
 import (
-	"embed"
-	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 	"github.com/pkg/browser"
-
-	//"github.com/pkg/browser"
 	"log"
 	"net/url"
 	"os"
 )
 
-// The Style Reader that takes the embedded FS, a filename and returns the css data in string
-func StyleReader(fs embed.FS, fileName string) (css string) {
-	StyleData, err := fs.ReadFile("assets/" + fileName)
-	if err != nil {
-		log.Fatal("Error Reading Styles!", err)
+// TextTruncate : A Function to Truncate the text provided to a certain size and then insert "..."
+func TextTruncate(Maxsize int, text string) string {
+	//Convert the string into array or runes
+	var textRunes = []rune(text)
+	//Get the Rune[] length
+	var textLength = len(textRunes)
+	// If te provided text is smaller than limit, return as it is
+	if textLength < Maxsize-3 {
+		return text
 	}
-	return string(StyleData)
+	//Slice the string till Maxsize-3 and add "..."
+	truncatedString := string(textRunes[:Maxsize-3]) + "..."
+	//Return it
+	return truncatedString
 }
 
-// The hover motion controller
-func EnableHoverPointer(button *gtk.Button) {
-
-	//connect event of cursor as pointer when it enters the button
-	button.Connect("enter-notify-event", func() {
-		display, err := button.GetDisplay()
-		if err != nil {
-			log.Fatal("Error Getting Display Info!", err)
-		}
-
-		cursor, err := gdk.CursorNewFromName(display, "pointer")
-		if err != nil {
-			log.Fatal("Error Changing Cursor to Pointer!", err)
-		}
-		window, err := button.GetWindow()
-		if err != nil {
-			log.Fatal("Error Getting Window Info!!", err)
-		}
-		window.SetCursor(cursor)
-	})
-
-	//set the cursor to default when it leaves the button
-	button.Connect("leave-notify-event", func() {
-		window, err := button.GetWindow()
-		if err != nil {
-			log.Fatal("Error Getting Window Info!!", err)
-		}
-		window.SetCursor(nil)
-	})
-}
-
-// TODO: Make the functionality later
-// Execute the Query from the input given as parameter
+// ExecuteQuery TODO: Make the functionality later
+// ExecuteQuery: Execute the Query from the input given as parameter
 func ExecuteQuery(input *gtk.SearchEntry) {
 	text, err := input.GetText()
 	if err != nil {
-		log.Fatal("Error getting Text from Search Query")
+		log.Fatal("Error getting Text from Search Query", err)
+
 	}
 
 	//check if the input is empty
 	if text == "" {
 		return
+
 	}
 
 	//url encode the input from user
 	website := "https://google.com/search?q="
-	url := url.QueryEscape(text)
+	URL := url.QueryEscape(text)
 
 	//open the encoded url in browser
-	browser.OpenURL(website + url)
+	err = browser.OpenURL(website + URL)
+	if err != nil {
+		log.Fatal("Error Opening your Browser!!", err)
+	}
 
 	//quit the app
 	os.Exit(0)
