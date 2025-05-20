@@ -32,6 +32,12 @@ window{
     margin-right: 5px;
     margin-left: 5px;
 }
+.menuButton:active{
+    background-color: rgba(20,20,20,0.5);
+}
+.menuButton:hover{
+    background-color: rgb(200,200,200);
+}
 
 
 /*Styles for the dialog*/
@@ -44,6 +50,12 @@ window{
 .menuDialogLayout{
     background-color: rgba(200,200,200,0.5);
     margin: 10px;
+}
+.menuDialogLayout:active{
+    background-color: rgba(20,20,20,0.5);
+}
+.menuDialogLayout:hover{
+    background-color: rgb(200,200,200);
 }
 
 /*Margins for elements inside Layout of MenuDialog Button*/

@@ -12,7 +12,6 @@ import (
 var assets embed.FS
 
 func main() {
-
 	//create the main app Search Bar
 	app.CreateSearchBar(assets)
 }

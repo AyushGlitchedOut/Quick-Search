@@ -1,0 +1,23 @@
+window{
+    background-color: rgb(20,20,20);
+}
+.sidebar{
+    background-color: rgb(20,20,20);
+    border-right: 1px solid grey;
+}
+.sidebarButton{
+    background-color: rgb(20,20,20);
+    border: 1px solid gray;
+    color: whitesmoke;
+}
+.sidebarButton:active{
+    background-color: rgba(128,128,128,0.5);
+}
+.sidebarButton *{
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.page{
+    background-color: rgb(20,20,20);
+    color: white;
+}

@@ -16,7 +16,7 @@ func CreateSearchBar(assets embed.FS) {
 	var IsMenuDialogOpen = false
 
 	//Get the Styles from embedded AppStyles.css file and load them
-	StyleData := services.StyleReader(assets, "Appstyles.css")
+	StyleData := services.StyleReader(assets, "assets/Appstyles.css")
 	cssProvider, err := gtk.CssProviderNew()
 	if err != nil {
 		log.Fatal("Error Getting Styles:", err)
